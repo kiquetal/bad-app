@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Created by kiquetal on 8/7/17.
@@ -21,46 +22,39 @@ import java.util.Map;
 public class AdapterFire extends org.zakariya.stickyheaders.SectioningAdapter{
 
 
-    Map<String,List<Codes>> codesFires=new HashMap<>();
-
-    List<Map<String,List<Codes>>>sections=new ArrayList<>();
-
-    List<String> namesSection=Arrays.asList("INFORMACIÓN DE APOYO","SITUACIÓN DE EMERGENCIA","INFORMACIÓN DE SERVICIO","INFORMACIONES NECESARIAS");
-    private boolean USE_DEBUG_APPEARANCE=true;
+    private Map<String,List<Codes>> codesFires=new HashMap<>();
+    private List<Map<String,List<Codes>>>sections=new ArrayList<>();
+    private List<String> namesSection=Arrays.asList("INFORMACIÓN DE APOYO","SITUACIÓN DE EMERGENCIA","INFORMACIÓN DE SERVICIO","INFORMACIONES NECESARIAS");
+    private boolean USE_DEBUG_APPEARANCE=false;
 
     public AdapterFire()
     {
-
         codesFires.put("INFORMACIÓN DE APOYO", Arrays.asList(new Codes("10.80","ANDE"),new Codes("10.81","ESSAP")));
         codesFires.put("SITUACIÓN DE EMERGENCIA", Arrays.asList(new Codes("10.70","Urgente. Sin demora"),new Codes("10.71","Sin urgencia. Normal"),new Codes("10.72","Pequeña magnitud"),new Codes("10.73","Mediana Magnitud")));
         codesFires.put("INFORMACIÓN DE SERVICIO", Arrays.asList(new Codes("10.40","Incendio especificar"),new Codes("10.41","Accidente especificar"),new Codes("10.42","Persona atrapada en ")));
-        codesFires.put("INFORMACIONES NECESARIAS",Arrays.asList(new Codes("10.00","Identifíquese [nombre o código]"),new Codes("10.01","Interferencia")));
+        codesFires.put("INFORMACIONES NECESARIAS",Arrays.asList(new Codes("10.00","Identifíquese [nombre o código]"),new Codes("10.01","Interferencia"),new Codes("10.02","Lectura de señales"),new Codes("10.03","Espere un momento")));
     }
 
-private class Codes{
-    private String code;
-    private String name;
-
-    Codes(String code,String name)
+    private class Codes
     {
-        this.code=code;
-        this.name=name;
+        private String code;
+        private String name;
+        Codes(String code,String name)
+        {
+            this.code=code;
+            this.name=name;
+        }
     }
-}
 
-
+Consumer<String> addingToList= s->{
+    Map<String,List<Codes>> mp=new HashMap<>();
+    mp.put(s,codesFires.get(s));
+    sections.add(mp);
+};
 
     public void loadList() {
          sections.clear();
-
-        int ind=0;
-        for (String in: namesSection)
-        {
-         Map<String,List<Codes>> mp=new HashMap<>();
-            mp.put(in,codesFires.get(in));
-            sections.add(mp);
-        }
-
+        namesSection.forEach(addingToList);
         notifyAllSectionsDataSetChanged();
     }
 
