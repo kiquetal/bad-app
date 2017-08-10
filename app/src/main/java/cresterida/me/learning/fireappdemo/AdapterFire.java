@@ -46,15 +46,15 @@ public class AdapterFire extends org.zakariya.stickyheaders.SectioningAdapter{
         }
     }
 
-Consumer<String> addingToList= s->{
-    Map<String,List<Codes>> mp=new HashMap<>();
-    mp.put(s,codesFires.get(s));
-    sections.add(mp);
-};
+
 
     public void loadList() {
          sections.clear();
-        namesSection.forEach(addingToList);
+        for (String s:namesSection)
+        {       Map<String,List<Codes>> mp=new HashMap<>();
+            mp.put(s,codesFires.get(s));
+            sections.add(mp);
+        };
         notifyAllSectionsDataSetChanged();
     }
 
